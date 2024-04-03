@@ -37,8 +37,64 @@
 */
 
 /* 
+    attacks/skills will be an object
+    {
+        name: "fire",
+        type: "fire",
+        power: 10,
+        mp: 5,
+        accuracy: .95,
+
+    }
+
+    player chooses an attack and target
+
+    attack check if hit or miss
+    use player accracy, move accuracy, enemy evasion
+
+    check if the attack will be a critical attack
+    question how should it stack with resistances? (calcualtedPower/resistances) * critModifier
+
+    apply player applicable affinities
+    apply player magic attack/ attack 
+
+    apply enemy resistances
+    apply enemy magic defense/ defense
+*/
+
+/* 
     The game will be small so inheritance is fine
 */
+class BaseAffinities{
+    fire = 1;
+    ice = 1;
+    force = 1;
+    lighting = 1;
+    dark = 1;
+    physical = 1;
+}
+// 0 nullify
+// -1 will absorb
+// -2 reflect
+// .5 will do double damage
+// ultimately it will check for 0 or -2, else do a divide to calculate damage
+// should put nullify and reflect in an enum
+const specialResistances = {
+    null: 0,
+    absorb: -1,
+    reflect: -2,
+} 
+
+// add special cases to these classes
+class BaseResistances{
+    fire = 1;
+    ice = 1;
+    force = 1;
+    lighting = 1;
+    dark = 1;
+    physical = 1;
+}
+
 class BaseCombatant{
     name;
     level;
@@ -60,16 +116,16 @@ class BaseCombatant{
     // baseMagicDefense
     baseStats;
 
-    constructor(name, level, xp, baseStats, affinities, resistances, skills){
+    constructor(name, level, xp, baseStats, skills){
         this.name = name;
         this.level - level;
         this.xp = xp;
         this.baseStats = baseStats;
-        this.affinities = affinities;
-        this.resistances = resistances;
+        this.affinities = new BaseAffinities;
+        this.resistances = new BaseResistances;
         
         // run method to set base actions and assign skills
-        this.assignActions(skills);
+        this.buildActions(skills);
 
         // run method to calculate stats
         this.calculateStats();
@@ -85,7 +141,7 @@ class BaseCombatant{
         this.magicDefense = this.baseStats.magicDefense + (this.level * 2);
     }
 
-    assignActions(skills){
+    buildActions(skills){
         this.actions = {
             attack: "attack",
             skills: "skills",
@@ -95,7 +151,36 @@ class BaseCombatant{
         }
     }
 
+    updateAffinities(updateMap){
+        for(const affinity in updateMap){
+            this.affinities[affinity] = updateMap[affinity];
+        }
+    }
+
+    updateResistances(updateMap){
+        for(const resistance in updateMap){
+            this.resistances[resistance] = updateMap[resistance];
+        }
+    }
+
 }
+
+
+class JackFrost extends BaseCombatant{
+    name = "Jack Frost";
+    affinities= new BaseAffinities();
+    resistances = new BaseResistances();
+    baseStats = {}
+    constructor(level, xp){
+        super(name, level, xp, {}, {});
+        this.updateAffinities({ice: 1.2, fire: .8})
+        this.updateResistances({ice: specialResistances.absorb, fire: .8})
+    }
+}
+
+const jackieFrost = new JackFrost;
+console.log(jackieFrost.affinities);
+console.log(jackieFrost.resistances)
 
 
 
