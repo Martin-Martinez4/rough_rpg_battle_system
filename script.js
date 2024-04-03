@@ -188,8 +188,8 @@ class BaseCombatant{
         // Find a better way to do this
         // Later implement growth factors/chances for stat growth
         const {strength, defense, magic, magicDefense} = this.growthRate;
-        
-        this.health = this.baseStats.health + (this.level * 8);
+
+        this.health = this.baseStats.health + (this.level * 7);
         this.strength = Math.round(this.baseStats.strength + (this.level  * strength*.1));
         this.defense = Math.round(this.baseStats.defense + (this.level * defense*.1));
         this.magic = Math.round(this.baseStats.magic + (this.level * magic*.1));
@@ -242,7 +242,7 @@ class BaseCombatant{
         }
 
         // level + strength * power 
-        const damageAmount = Math.floor((this.level * 3 + this.strength * 2 + power * this.affinities[type])/(targetResistance + target.defense * .20));
+        const damageAmount = Math.floor((Math.pow(this.level, 1.8) * 1.5 + this.strength * (power) * this.affinities[type])/(targetResistance + target.defense * .20));
 
         console.log(damageAmount)
     }
@@ -289,7 +289,7 @@ class JackFrost extends BaseCombatant{
 
         this.updateAffinities({
             ice: 1.2, 
-            fire: .8
+            fire: 1
         });
 
         this.updateResistances({
@@ -301,13 +301,22 @@ class JackFrost extends BaseCombatant{
 
 
 const jackieFrost = new JackFrost(2);
-jackieFrost.showStats();
+const jackieFrost20 = new JackFrost(20);
+const jackieFrost21 = new JackFrost(21);
+const jackieFrost200 = new JackFrost(200);
+const jackieFrost201 = new JackFrost(201);
 
-const jackieFrost2 = new JackFrost(200);
-jackieFrost2.showStats();
+jackieFrost20.attackTarget({name: "fire", type: "fire", power: 10}, jackieFrost21);
+jackieFrost20.showStats();
+
+jackieFrost200.attackTarget({name: "fire", type: "fire", power: 10}, jackieFrost201);
+jackieFrost200.showStats();
+jackieFrost200.attackTarget({name: "lighting", type: "fire", power: 10}, jackieFrost201);
+jackieFrost200.showStats();
 
 
 
+// attack needs to scale faster 
 
 
 
