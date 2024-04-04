@@ -8,7 +8,6 @@ import { BaseResistances } from "./models/BaseStats.js";
 // Defines what happens when base actions are taken
 // items
 
-
 export class JackFrost extends BaseCombatant{
     constructor(level){
         super(

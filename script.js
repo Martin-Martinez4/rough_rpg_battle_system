@@ -5,6 +5,11 @@ import {JackFrost, JackOLantern, Impundulu} from "./enemies.js";
 /* 
     The game will be small so inheritance is fine
 */
+/*
+    Maybe create a game loop type of class that handles fights and end game states?  
+    The fight can be a class.  A new one is created each time a fight is started.  
+    after an attack the game checks for end game conditions.  or who died
+*/
 const jackieFrost = new JackFrost(2);
 const jackieFrost20 = new JackFrost(20);
 const jackieFrost21 = new JackFrost(21);

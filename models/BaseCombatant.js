@@ -191,6 +191,8 @@ export class BaseCombatant{
             damageAmount = Math.floor((Math.pow(this.level, .95 + (this.level/(target.level+this.level))) * 1.25 + this.magic * (power) * this.affinities[element]) / (targetResistance + target.magicDefense * .25));
 
         }
+
+        // Target or player takes damage
         console.log(damageAmount)
     }
 
