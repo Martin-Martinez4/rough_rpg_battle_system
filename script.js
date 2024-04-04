@@ -187,13 +187,14 @@ class BaseCombatant{
     calculateStats(){
         // Find a better way to do this
         // Later implement growth factors/chances for stat growth
-        const {strength, defense, magic, magicDefense} = this.growthRate;
+        const {strength, defense, magic, magicDefense, luck} = this.growthRate;
 
         this.health = this.baseStats.health + (this.level * 7);
-        this.strength = Math.round(this.baseStats.strength + (this.level  * strength*.1));
-        this.defense = Math.round(this.baseStats.defense + (this.level * defense*.1));
-        this.magic = Math.round(this.baseStats.magic + (this.level * magic*.1));
-        this.magicDefense = Math.round(this.baseStats.magicDefense + (this.level * magicDefense*.1));
+        this.strength = Math.round(this.baseStats.strength + (this.level  * strength));
+        this.defense = Math.round(this.baseStats.defense + (this.level * defense));
+        this.magic = Math.round(this.baseStats.magic + (this.level * magic));
+        this.magicDefense = Math.round(this.baseStats.magicDefense + (this.level * magicDefense));
+        this.luck = Math.round(this.baseStats.luck + (this.level * luck));
     }
 
     buildActions(skills){
@@ -257,6 +258,57 @@ class BaseCombatant{
         return false;
     }
 
+    levelUp(){
+        // Health and MP always increase
+        // There are three stat increase chances
+            // stats have an antagonistic relationship to each other, if one stat increases it disallows the other from increasing
+        // To be implemented later, one user choice point in addition to the three
+        let numberOfStatIncreases = 3;
+
+        while(numberOfStatIncreases > 0){
+            let roll = Math.random();
+            numberOfStatIncreases--;
+
+            // ugly code need to make a loop at the very least
+            let lastRange = 0;
+            if(roll > 0 && roll <= this.growthRate.strength){
+                this.strength += 1;
+                continue;
+            }
+
+            lastRange += this.growthRate.strength;
+            if(roll <= this.growthRate.defense + lastRange){
+                this.defense += 1;
+                continue;
+            }
+
+            lastRange += this.growthRate.defense;
+            if(roll <= this.growthRate.magic + lastRange){
+                this.magic += 1;
+                continue;
+            }
+
+            lastRange += this.growthRate.magic;
+            if(roll <= this.growthRate.magicDefense  + lastRange){
+                this.magicDefense += 1;
+                continue;
+            }
+
+            lastRange += this.growthRate.magicDefense;
+
+            console.log(this.growthRate.luck + lastRange)
+            if(roll <= this.growthRate.luck + lastRange){
+                this.luck += 1;
+                continue;
+            }
+        }
+
+        this.health += 10;
+        this.level++;
+
+
+    }
+
     showStats(){
        console.log( {
             name: this.name,
@@ -265,7 +317,8 @@ class BaseCombatant{
             strength: this.strength,
             defense: this.strength,
             magic: this.magic,
-            magicDefense: this.magicDefense
+            magicDefense: this.magicDefense,
+            luck: this.luck,
         })
     }
 
@@ -282,9 +335,9 @@ class JackFrost extends BaseCombatant{
             name, 
             level, 
             0, 
-            {health: 30, strength: 5, defense: 5, magic: 8, magicDefense: 8}, 
+            {health: 30, strength: 5, defense: 5, magic: 8, magicDefense: 8, luck: 5}, 
             {}, 
-            {strength: 17, defense: 17, magic: 25, magicDefense: 25, luck: 16}
+            {strength: .17, defense: .11, magic: .28, magicDefense: .28, luck: .16}
         );
 
         this.updateAffinities({
@@ -314,6 +367,9 @@ jackieFrost200.showStats();
 jackieFrost200.attackTarget({name: "lighting", type: "fire", power: 10}, jackieFrost201);
 jackieFrost200.showStats();
 
+jackieFrost.showStats();
+jackieFrost.levelUp();
+jackieFrost.showStats();
 
 
 // attack needs to scale faster 
