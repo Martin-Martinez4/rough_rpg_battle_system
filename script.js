@@ -1,5 +1,6 @@
 import { Attack } from "./models/Attacks.js";
 import {JackFrost, JackOLantern, Impundulu} from "./enemies.js";
+import { GameLoop } from "./models/GameLoop.js";
 
 
 /* 
@@ -66,6 +67,12 @@ jackieFrost.attackTarget({name: "fire", element: "fire", power: 10, type: Attack
 
 const impundulu = new Impundulu(2);
 impundulu.showStats();
+
+let currentPlayerTeam = [jackieFrost20, jackieFrost21, jackieFrost25];
+let currentEnemyTeam = [jackLantern, jackieFrost29, jackieFrost30];
+
+const game = new GameLoop();
+game.handleBattle(currentPlayerTeam, currentEnemyTeam)
 
 
 
